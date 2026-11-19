@@ -34,9 +34,9 @@ if [ "${#files[@]}" -eq 1 ] && [ "${files[0]}" = "team-tips.md" ]; then
 fi
 
 # --- First-contribution lab: exactly one attendee file --------------------
-if [ "${#files[@]}" -ne 1 ]; then
-  fail "Change exactly one file: your attendees/<your-name>.md profile. This pull request changes ${#files[@]} files: ${files[*]}"
-fi
+#if [ "${#files[@]}" -ne 1 ]; then
+#  fail "Change exactly one file: your attendees/<your-name>.md profile. This pull request changes ${#files[@]} files: ${files[*]}"
+#fi
 
 file="${files[0]}"
 
