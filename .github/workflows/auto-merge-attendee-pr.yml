@@ -1,15 +1,17 @@
-name: Merge after peer comment
+name: Merge after comment
 
-# Workshop-only convenience. When someone OTHER than the pull request author
+# Workshop-only convenience. When ANYONE (including the pull request author)
 # leaves a comment on the PR, this turns on auto-merge. GitHub then merges the
-# PR as soon as the required "Check attendee file" check passes.
+# PR as soon as the required "Check attendee file" check passes. Anyone may
+# comment, so people taking the course on their own can comment on their own PR.
+# Bot comments are ignored, including this workflow's own replies, so it can't loop.
 #
 # Why issue_comment and nothing else:
 #   Workflows triggered by review events on PRs from forks get a read-only
 #   token and cannot merge. issue_comment always runs in the context of this
 #   repository's default branch with a write token. The tradeoff is that only
 #   comments in the main Conversation comment box count, not line comments or
-#   submitted reviews. The lab tells reviewers to do both.
+#   submitted reviews. The lab tells people to post a comment in that box.
 #
 # Security: this workflow never checks out or runs code from the pull request.
 # All event values are passed through env vars, never interpolated into scripts.
@@ -29,15 +31,14 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       PR_NUMBER: ${{ github.event.issue.number }}
-      PR_AUTHOR: ${{ github.event.issue.user.login }}
       COMMENTER: ${{ github.event.comment.user.login }}
       COMMENTER_TYPE: ${{ github.event.comment.user.type }}
     steps:
-      - name: Ignore bots and the author's own comments
+      - name: Ignore bot comments
         id: gate
         run: |
-          if [ "$COMMENTER_TYPE" = "Bot" ] || [ "$COMMENTER" = "$PR_AUTHOR" ]; then
-            echo "Comment is from a bot or the PR author. Nothing to do."
+          if [ "$COMMENTER_TYPE" = "Bot" ]; then
+            echo "Comment is from a bot. Nothing to do."
             echo "proceed=false" >> "$GITHUB_OUTPUT"
           else
             echo "proceed=true" >> "$GITHUB_OUTPUT"
@@ -65,7 +66,7 @@ jobs:
           if gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash \
              || gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --squash; then
             gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body \
-              "Thanks @${COMMENTER} for reviewing. This pull request will merge automatically once the **Check attendee file** check passes."
+              "Thanks @${COMMENTER}. Your comment started the merge. This pull request will merge automatically once the **Check attendee file** check passes."
           else
             gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --body \
               "Could not enable the automatic merge. Most likely there is a merge conflict or the check failed. Open the **Checks** tab for details, fix the problem, and push again."

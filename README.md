@@ -20,10 +20,10 @@ Practice repository for the ThunderSF Git & Version Control training.
 You do not push to this repository directly. You work in your own **fork** (a personal copy under your GitHub account) and send changes here with a **pull request**.
 
 1. A bot checks that your pull request changes only the file it should and that the file is filled in correctly.
-2. A classmate you choose reviews your pull request and leaves a comment.
-3. Once the check passes and someone other than you has commented, the bot merges it.
+2. Someone reviews your pull request and leaves a comment. In a live session that is a classmate. If you are working on your own, you comment on your own pull request.
+3. Once the check passes and a comment has been posted (by anyone, including you), the bot merges it.
 
-In real client repositories, the merge step requires a human approval. The bot is here only so a large group can finish in one session.
+In real client repositories, the merge step requires a human approval. The bot is here only so everyone can finish the lab, live or on their own.
 
 ## Lab markers (Module 4)
 
